@@ -1,20 +1,12 @@
-<nav>
-    <a routerLink="/uploads">Uploads</a>
-</nav>
-<div>
-    <button
-        (click) = "getTopMessages(targetedUser, 10)"
-    >
-        Get top Messages for user
-    </button>
-    <input
-        (change)="updateUser($event)"
-        placeholder="Enter a username"
-    />
-
-    <ul *ngIf="messages.length > 0">
-        <li *ngFor="let message of messages">
-            {{message.message}}
-        </li>
-    </ul>
+<div class="wrapper">
+    <div>
+        <nav>
+            <a routerLink="/uploads">Uploads</a>
+        </nav>
+        <button (click) = "getUsers()">REFRESH DATA</button>
+        <button (click) = "clearData()">CLEAR DATA</button>
+    </div>
+        <div class="stats-wrapper">
+            <stats-display *ngFor="let user of users" [user]="user"></stats-display>
+        </div>
 </div>

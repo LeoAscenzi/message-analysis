@@ -1,36 +1,31 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FileUploadService } from '../../services/file-upload.service';
 import { CommonModule } from '@angular/common';
-
-export interface Message {
-    message: string,
-    len: number,
-}
+import { StatsDisplay } from '../../stats-display/stats-display.component';
 
 @Component({
     selector: "app-home",
     standalone: true,
-    imports: [RouterModule, CommonModule],
+    imports: [RouterModule, CommonModule, StatsDisplay],
     templateUrl: './home.component.html',
+    styleUrl: './home.component.css',
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit {
 
-    messages: Message[] = []
+    users: string[] = []
     targetedUser:string = "";
     constructor(private uploadService: FileUploadService) {}
 
-    getTopMessages(username: string, n: number): void {
-        if(this.targetedUser == "")
-        {
-            console.error("No user specified");
-            return;
-        }
-        this.uploadService.getTopMessages(username, n).subscribe({
+    ngOnInit(): void {
+        this.getUsers();
+    }
+
+    getUsers(): void {
+        this.uploadService.getUsers().subscribe({
             next: (resp) => {
                 console.log(resp);
-                this.messages = JSON.parse(resp);
-                console.log(this.messages);
+                this.users = resp;
             },
             error: (err) => {
                 console.error(err);
@@ -38,9 +33,15 @@ export class HomeComponent {
         })
     }
 
-    updateUser(event: Event): void {
-        const input = event.target as HTMLInputElement;
-        this.targetedUser = input.value;
-        console.log(this.targetedUser);
+    clearData(): void {
+        this.uploadService.clearData().subscribe({
+            next: (resp) => {
+                console.log(resp);
+            },
+            error: (err) => {
+                console.error(err);
+            }
+        })
     }
+
 };

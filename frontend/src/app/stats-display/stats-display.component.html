@@ -1,0 +1,10 @@
+<div class="stats-inner">
+    <div *ngIf='user != ""'>Hello {{user}}
+        <ul *ngIf="messages.length > 0">
+            <li *ngFor="let message of messages">
+                {{message.message}}
+            </li>
+        </ul>
+    </div>
+
+</div>

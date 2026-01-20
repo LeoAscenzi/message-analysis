@@ -28,6 +28,10 @@ export class FileUploadService{
 
         return this.http.post<UploadResponse>(`${this.url}/upload-messages-json/`, formData);
     }
+
+    getUsers(): Observable<any> {
+        return this.http.get<any>(`${this.url}/get-users`);
+    }
     
     clearData(): Observable<string> {
         return this.http.get<string>(`${this.url}/clear-data`);

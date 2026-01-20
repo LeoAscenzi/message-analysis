@@ -9,7 +9,7 @@ import utils
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.df = pl.DataFrame(schema= {"name": str, "date": pl.Datetime(time_unit="ms"), "message": str})
-    app.state.file_meta_info = {}
+    app.state.user_list = set()
     app.state.df_lock = asyncio.Lock()
     print("Starting App")
 
@@ -22,10 +22,10 @@ app = FastAPI(lifespan=lifespan)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:4200"],  # Your Angular dev server URL
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 @app.get("/")
@@ -37,9 +37,14 @@ def healthcheck():
 def clear_data():
     try:
         app.state.df = pl.DataFrame(schema= {"name": str, "date": pl.Datetime(time_unit="ms"), "message": str})
+        app.state.user_list = set()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     return "Data Cleared!"
+
+@app.get("/get-users")
+def get_users():
+    return [val for val in app.state.user_list]
 
 @app.get("/get-dashboard")
 def get_dashboard():
@@ -67,6 +72,7 @@ async def upload_messages_json(files: list[UploadFile] = File(...)):
                 success_files.append(result["filename"])
                 dfs_to_combine.append(result["data"])
                 rows_added += result["rows"]
+                app.state.user_list.update(result["users"])
             else:
                 failed_files.append(result["filename"])
         
@@ -83,8 +89,9 @@ async def parse_messages_file(file: UploadFile) -> dict:
         contents = await file.read()
         data = json.loads(contents.decode('utf-8'))
         messages = data['messages']
+        users = [participant["name"] for participant in data['participants']]
         df_part = utils.parseJsonMessagesToDf(messages)
-        return {"rows": df_part.shape[0], "filename": file.filename, "status": "success", "data": df_part}
+        return {"rows": df_part.shape[0], "filename": file.filename, "status": "success", "data": df_part, "users": users}
     
     except Exception as e:
         print(e)
