@@ -1,1 +1,4 @@
 backend/input/*.json
+.idea
+__pycache__/
+*.pyc
