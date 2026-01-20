@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FileUploadService } from '../../services/file-upload.service';
 import { CommonModule } from '@angular/common';
@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
 
     users: string[] = []
     targetedUser:string = "";
-    constructor(private uploadService: FileUploadService) {}
+    uploadService: FileUploadService = inject(FileUploadService);
 
     ngOnInit(): void {
         this.getUsers();

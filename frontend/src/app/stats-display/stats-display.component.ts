@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, inject } from "@angular/core";
 import { FileUploadService } from "../services/file-upload.service";
 
 
@@ -18,12 +18,12 @@ export interface Message {
 export class StatsDisplay implements OnInit{
     @Input() user: string = ""
     messages: Message[] = []
-    constructor(private uploadService: FileUploadService){}
+    uploadService: FileUploadService = inject(FileUploadService);
 
     ngOnInit(): void {
         this.loadTopMessages();
     }
-    
+
     loadTopMessages(){
         this.uploadService.getTopMessages(this.user, 10).subscribe({
             next: (resp) => {

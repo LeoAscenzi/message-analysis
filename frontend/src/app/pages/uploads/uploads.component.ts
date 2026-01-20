@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { RouterModule } from '@angular/router';
 import { FileUploadService } from "../../services/file-upload.service";
 import { CommonModule } from "@angular/common";
@@ -15,7 +15,7 @@ export class UploadsComponent {
 
     selectedFiles: File[] = [];
 
-    constructor(private uploadService: FileUploadService) {}
+    uploadService: FileUploadService = inject(FileUploadService);
 
     onFileSelect(event: Event): void {
         const input = event.target as HTMLInputElement;
@@ -30,7 +30,7 @@ export class UploadsComponent {
             console.error("No files present to upload");
             return;
         }
-        
+
         this.uploadService.uploadFiles(this.selectedFiles).subscribe({
             next: (response) => {
                 console.log(response);
