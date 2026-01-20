@@ -1,1 +1,0 @@
-Put the message_<number>.json files inside here for a specific chat

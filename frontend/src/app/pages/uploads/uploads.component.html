@@ -1,0 +1,20 @@
+<nav>
+    <a routerLink="/">Home</a>
+</nav>
+<h2>Upload message.json files here!</h2>
+  <input 
+    type="file" 
+    multiple 
+    accept=".json"
+    (change)="onFileSelect($event)"
+    #fileInput
+  />
+
+<div *ngIf="selectedFiles.length > 0">
+    {{selectedFiles.length}} files selected!
+    <button
+        (click)="uploadFiles()"
+    >
+        Submit
+    </button>
+</div>

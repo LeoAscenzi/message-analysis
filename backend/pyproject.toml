@@ -4,4 +4,8 @@ version = "0.1.0"
 description = "Tool to analyze instagram messages"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "asyncio>=4.0.0",
+    "fastapi[standard]>=0.128.0",
+    "polars>=1.37.1",
+]

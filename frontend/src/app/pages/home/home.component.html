@@ -1,0 +1,20 @@
+<nav>
+    <a routerLink="/uploads">Uploads</a>
+</nav>
+<div>
+    <button
+        (click) = "getTopMessages(targetedUser, 10)"
+    >
+        Get top Messages for user
+    </button>
+    <input
+        (change)="updateUser($event)"
+        placeholder="Enter a username"
+    />
+
+    <ul *ngIf="messages.length > 0">
+        <li *ngFor="let message of messages">
+            {{message.message}}
+        </li>
+    </ul>
+</div>
